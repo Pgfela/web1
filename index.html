@@ -1,88 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Q-Stack™ AI Report Generator</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+      height: 100%;
+      font-family: sans-serif;
+    }
+
+    #main {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #f9f9f9;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      flex-direction: column;
+      z-index: 2;
     }
-    #main {
-      text-align: center;
-      padding: 2rem;
-      background: white;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border-radius: 12px;
-      z-index: 1;
-    }
+
     button {
-      padding: .75rem 1.5rem;
+      padding: 0.75rem 1.5rem;
       font-size: 1rem;
-      background: #2e86de;
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
-    button:hover { background: #1e6fb8; }
+
     #loading {
-      display: none;
       margin-top: 1rem;
       font-style: italic;
-      color: #666;
-    }
-    #video-frame {
+      color: #555;
       display: none;
+    }
+
+    video {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: black;
-      z-index: 9999;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+      object-fit: cover;
+      z-index: 1;
+      display: none;
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onkeydown="return false;" onbeforeunload="return 'Report is still generating...';">
+
   <div id="main">
     <h1>Q-Stack™ AI Report Generator</h1>
-    <p>Generate personalized deep analysis reports in seconds.</p>
-    <button id="start-btn">Generate Report</button>
-    <div id="loading">Booting analysis engine…<br> Allocating quantum resources…</div>
+    <p>Initializing encrypted insight module...</p>
+    <button id="start">Launch Report</button>
+    <div id="loading">Analyzing patterns...</div>
   </div>
 
-  <div id="video-frame">
-    <iframe 
-      src="https://archive.org/embed/Rick_Astley_Never_Gonna_Give_You_Up?playlist=1&autoplay=1&loop=1"
-      allow="autoplay; fullscreen"
-      title="AI Report Stream"
-    ></iframe>
-  </div>
+  <video id="rickroll" autoplay loop playsinline></video>
 
   <script>
-    const btn = document.getElementById('start-btn');
+    const btn = document.getElementById('start');
     const loading = document.getElementById('loading');
     const main = document.getElementById('main');
-    const frame = document.getElementById('video-frame');
+    const video = document.getElementById('rickroll');
 
-    const fakeMsgs = [
-      "Booting analysis engine...",
-      "Allocating quantum resources...",
-      "Decrypting cognitive matrix...",
-      "Finalizing deep insight layers...",
-      "Almost done..."
+    const loadingMsgs = [
+      "Loading secure models...",
+      "Aligning matrix layers...",
+      "Scanning behavior logs...",
+      "Finalizing report..."
     ];
+
+    // Force fullscreen
+    function goFullscreen(elem) {
+      if (elem.requestFullscreen) elem.requestFullscreen();
+      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+    }
+
+    // Disable keyboard and mouse
+    function lockInputs() {
+      document.addEventListener('keydown', e => e.preventDefault());
+      document.addEventListener('keypress', e => e.preventDefault());
+      document.addEventListener('keyup', e => e.preventDefault());
+      document.addEventListener('contextmenu', e => e.preventDefault());
+    }
+
+    // Prevent closing
+    window.onbeforeunload = () => 'Report is still generating...';
 
     btn.addEventListener('click', () => {
       btn.disabled = true;
@@ -90,15 +100,25 @@
 
       let i = 0;
       const interval = setInterval(() => {
-        loading.innerText = fakeMsgs[i++ % fakeMsgs.length];
-      }, 600);
+        loading.innerText = loadingMsgs[i++ % loadingMsgs.length];
+      }, 700);
 
       setTimeout(() => {
         clearInterval(interval);
         main.style.display = 'none';
-        frame.style.display = 'block';
-      }, 3200);
+        video.style.display = 'block';
+
+        // Set video source
+        video.src = "rickroll.mp4";
+        video.muted = false;
+        video.volume = 1.0;
+        video.play();
+
+        goFullscreen(video);
+        lockInputs();
+      }, 3000);
     });
   </script>
+
 </body>
 </html>
